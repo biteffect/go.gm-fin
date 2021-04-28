@@ -8,22 +8,21 @@ import (
 
 type CurrencyCode string
 
-type ICurrencyStore interface {
-	ByCode(CurrencyCode) (*Currency, error)
-	ByNumericCode(int) (*Currency, error)
-}
+const (
+	CurrencyAny CurrencyCode = "ANY"
+	CurrencyUAH CurrencyCode = "UAH"
+	CurrencyRUB CurrencyCode = "RUB"
+	CurrencyUSD CurrencyCode = "USD"
+	CurrencyEUR CurrencyCode = "EUR"
+)
 
-type currencyBase struct {
+type Currency struct {
 	Code        CurrencyCode `pg:",notnull,pk,type:varchar(3)"`
 	NumericCode int          `json:"-" pg:"numeric,notnull"`
 	Name        string       `pg:",notnull,type:varchar(24)"`
 	Fraction    int          `pg:",notnull"`
 	Grapheme    string       `pg:",notnull"`
 	Template    string       `pg:",notnull"`
-}
-
-type Currency struct {
-	currencyBase
 }
 
 func (c *Currency) String() string {
@@ -51,11 +50,8 @@ func (c *Currency) UnmarshalJSON(bytes []byte) error {
 	if len(str) != 3 {
 		return fmt.Errorf("unsupported currency: %v", str)
 	}
-	if currencyStore == nil {
-		setDummyCurrencyStore()
-	}
-	v, err := currencyStore.ByCode(CurrencyCode(str))
-	if err != nil {
+	v, ok := currencies[CurrencyCode(str)]
+	if !ok {
 		return fmt.Errorf("unsupported currency: %v", str)
 	}
 	*c = *v
@@ -70,12 +66,14 @@ func (c Currency) MarshalJSON() ([]byte, error) {
 func NewCurrency(v interface{}) (*Currency, error) {
 	switch v.(type) {
 	case string:
-		if v, err := currencyStore.ByCode(CurrencyCode(v.(string))); err == nil {
+		if v, ok := currencies[CurrencyCode(v.(string))]; ok {
 			return v, nil
 		}
 	case int:
-		if v, err := currencyStore.ByNumericCode(v.(int)); err == nil {
-			return v, nil
+		for _, c := range currencies {
+			if c.NumericCode == v.(int) {
+				return c, nil
+			}
 		}
 	default:
 	}
