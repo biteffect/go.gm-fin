@@ -15,7 +15,7 @@ import (
     12.0001 -> json -> 12.00
 
  amount type parsed from json and
- */
+*/
 
 type Amount int64
 
