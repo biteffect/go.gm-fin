@@ -1,5 +1,4 @@
-
-package gmlib
+package gmfin
 
 import (
 	"database/sql/driver"
