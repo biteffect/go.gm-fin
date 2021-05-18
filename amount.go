@@ -49,6 +49,14 @@ func (m Amount) PercentOf(p Amount) Amount {
 	return Amount((int64(p) * int64(m)) / 1000000)
 }
 */
+
+func (m Amount) Abs() Amount {
+	if m < 0 {
+		return m.Negative()
+	}
+	return Amount(int64(m))
+}
+
 func (m Amount) Add(v Amount) Amount {
 	return Amount(int64(m) + int64(v))
 }
