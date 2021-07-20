@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -34,7 +35,7 @@ func (c *CreditCard) NumberString() string {
 
 func (c *CreditCard) Mask() string {
 	str := c.NumberString()
-	return str[:6] + "***" + str[len(str)-4:]
+	return str[:4] + strings.Repeat("*", len(str)-8) + str[len(str)-4:]
 }
 
 func (c *CreditCard) Mask2() string {
