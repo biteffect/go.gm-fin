@@ -126,29 +126,27 @@ func (c *CreditCard) IsTestCard() bool {
 }
 
 func Luhn(number string) bool {
-	sum := 0
-	len := len(number)
-	flip := false
-	for i := len - 1; i > -1; i-- {
+	l := len(number)
+	if l < 13 || l > 16 {
+		return false
+	}
+	parity := l % 2
+	sum, err := strconv.Atoi(number[l-1:])
+	if err != nil {
+		return false
+	}
+	for i := 0; i < l-1; i++ {
 		num, err := strconv.Atoi(string(number[i]))
 		if err != nil {
 			return false
 		}
-		flip = !flip
-		if flip {
+		if i%2 == parity {
 			num = num * 2
 			if num > 9 {
-				sum += (num)%10 + 1
-				continue
+				num = num - 9
 			}
-			sum += num
-			continue
 		}
 		sum += num
 	}
-	n := strconv.Itoa(sum * 9)
-	x := string(n[2])
-	i, _ := strconv.Atoi(x)
-	sum += i
 	return sum%10 == 0
 }
