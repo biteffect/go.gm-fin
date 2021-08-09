@@ -44,6 +44,14 @@ func (m Amount) Percent(p Amount) Amount {
 	return Amount((int64(p) * int64(m)) / 1000000)
 }
 
+func (m Amount) ValidateCurrencyFraction(cur *Currency) error {
+	// TODO ned refator to use cur.Fraction in calculation
+	if int64(m)-(100*int64(m/100)) > 0 {
+		return fmt.Errorf("%s currency fraction is %v", cur.Name, cur.Fraction)
+	}
+	return nil
+}
+
 /*
 func (m Amount) PercentOf(p Amount) Amount {
 	return Amount((int64(p) * int64(m)) / 1000000)
