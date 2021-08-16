@@ -38,9 +38,12 @@ func (c *CreditCard) Mask() string {
 	return str[:4] + strings.Repeat("*", len(str)-8) + str[len(str)-4:]
 }
 
-func (c *CreditCard) Mask2() string {
+func (c *CreditCard) MaskFull() string {
 	str := c.NumberString()
-	return str[:6] + "*" + str[len(str)-2:]
+	if len(str) < 11 {
+		return str
+	}
+	return str[:6] + strings.Repeat("*", len(str)-10) + str[len(str)-4:]
 }
 
 func (c *CreditCard) SecurityCodeString() string {
