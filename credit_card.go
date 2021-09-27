@@ -18,6 +18,7 @@ const (
 	Diners     CardIssuerType = "diners"
 	Discover   CardIssuerType = "discover"
 	JCB        CardIssuerType = "jcb"
+	Prostir    CardIssuerType = "prostir"
 	Other      CardIssuerType = "other"
 )
 
@@ -57,6 +58,7 @@ func (c *CreditCard) Issuer() CardIssuerType {
 	regDiners, _ := regexp.Compile(`^3(?:0[0-5]|[68][0-9])[0-9]{11}$`)
 	regDiscover, _ := regexp.Compile(`^6(?:011|5[0-9]{2})[0-9]{12}$`)
 	regJCB, _ := regexp.Compile(`^(?:2131|1800|35\d{3})\d{11}$`)
+	regProstir, _ := regexp.Compile(`^9[0-9]{12}(?:[0-9]{3})?$`)
 	reg := map[CardIssuerType]interface{}{
 		Visa:       regVisa,
 		MasterCard: regMaster,
@@ -64,6 +66,7 @@ func (c *CreditCard) Issuer() CardIssuerType {
 		Diners:     regDiners,
 		Discover:   regDiscover,
 		JCB:        regJCB,
+		Prostir:    regProstir,
 	}
 	for t, r := range reg {
 		if r.(*regexp.Regexp).MatchString(c.NumberString()) {
