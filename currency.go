@@ -65,10 +65,12 @@ func (c Currency) MarshalJSON() ([]byte, error) {
 
 func NewCurrency(v interface{}) (*Currency, error) {
 	switch v.(type) {
-	case string:
-		if v, ok := currencies[CurrencyCode(v.(string))]; ok {
+	case CurrencyCode:
+		if v, ok := currencies[v.(CurrencyCode)]; ok {
 			return v, nil
 		}
+	case string:
+		return NewCurrency(CurrencyCode(v.(string)))
 	case int:
 		for _, c := range currencies {
 			if c.NumericCode == v.(int) {
