@@ -23,6 +23,10 @@ func AmountFromCents(cents int) Amount {
 	return Amount(100 * cents)
 }
 
+func AmountFromFloat(v float64) Amount {
+	return Amount(int64(10000 * v))
+}
+
 func (m Amount) InCents() int64 {
 	return int64(m.BankRound() / 100)
 }
@@ -75,6 +79,10 @@ func (m Amount) Sub(v Amount) Amount {
 
 func (m Amount) Negative() Amount {
 	return Amount(0 - int64(m))
+}
+
+func (m Amount) Float() float64 {
+	return float64(m) / 10000
 }
 
 func (m Amount) IntegerPartAsInt() int {

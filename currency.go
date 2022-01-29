@@ -30,6 +30,9 @@ func (c *Currency) String() string {
 }
 
 func (c *Currency) Equals(cc *Currency) bool {
+	if cc == nil {
+		return false
+	}
 	return c.NumericCode == cc.NumericCode
 }
 
