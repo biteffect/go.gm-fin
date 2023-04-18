@@ -141,7 +141,9 @@ func (m *Amount) UnmarshalJSON(bytes []byte) error {
 	if string(bytes) == "null" {
 		return nil
 	}
-	v := strings.Replace(string(bytes), ",", ".", 1)
+	v := strings.Trim(string(bytes), "\" ")
+	v = strings.TrimSpace(v)
+	v = strings.Replace(v, ",", ".", 1)
 	idx := strings.Index(v, ".")
 	if idx < 0 {
 		v += "0000"
